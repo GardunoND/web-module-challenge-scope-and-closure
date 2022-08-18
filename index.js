@@ -30,11 +30,19 @@ console.log('example task:', processFirstItem(['foo','bar'],function(str){return
   Study the code for counter1 and counter2, then answer the questions below.
   
   1. What is the difference between counter1 and counter2?
+
+  counter1 has a private variable, and counter 2 technically has no variable and updates the global variable count.
   
   2. Which of the two uses a closure? How can you tell?
-  
+
+counter1 because the inner function traverses/reaches out to the outer function to get the value of the private variable.
+
   3. In what scenario would the counter1 code be preferable? In what scenario would 
-     counter2 be better?  
+     counter2 be better? 
+     
+i would use counter1 if i needed to reserve/save the specific count value in its own container
+i would use counter2 if i wanted to change the value of the variable anywhere later on in the code
+
 */
 
 // counter1 code
@@ -65,7 +73,7 @@ NOTE: This will be a callback function for the tasks below
 */
 
 function inning(/*Code Here*/){
-    /*Code Here*/
+    return Math.floor(Math.random() * Math.floor(3))
 }
 
 
@@ -83,8 +91,16 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(/*Code Here*/){
-  /*Code Here*/
+function finalScore(cb, innNum){
+  let homeCount = 0;
+  let awayCount = 0;
+  for (let i = 0; i < innNum; i++){
+    homeCount = homeCount ++;
+    awayCount = awayCount ++;
+  }
+  return { 
+    Home: homeCount, 
+    Away: awayCount }
 }
 
 
@@ -101,10 +117,14 @@ For example: invoking getInningScore(inning) might return this object:
   */
 
 
-function getInningScore(/*Your Code Here */) {
-  /*Your Code Here */
-
+function getInningScore(inningCB) {
+  return {
+    Home: inningCB(), 
+    Away: inningCB()
+  }
 }
+
+
 
 
 /* STRETCH: ⚾️⚾️⚾️ Task 5: scoreboard() ⚾️⚾️⚾️
@@ -147,9 +167,28 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ] */
 // NOTE: There is no test associated with this code; if your output matches the given example, consider it complete!
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(getInningScore, inning, innNum) {
+  let end = [];
+  let homeCount = 0;
+  let awayCount = 0;
+
+  for( let i = 1; i <= innNum; i++){
+    const nowScore = getInningScore(inning)
+    homeCount += nowScore.Home;
+    awayCount += nowScore.Away;
+    end.push(`Inning ${i}: Away ${awayCount} - Home ${homeCount}`)
+  }
+  if (homeCount === awayCount){
+    end.push(`This game will require extra innings: Away ${awayCount} - Home ${homeCount}`)
+  }
+  else{
+    end.push(`Final Score: Away: ${awayCount} - Home: ${homeCount}`)
+  }
+
+  return end
 }
+
+console.log(scoreboard(getInningScore,inning,9))
 
 
 
